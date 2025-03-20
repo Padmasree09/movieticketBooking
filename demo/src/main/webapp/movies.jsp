@@ -1,85 +1,124 @@
-<%-- Updated movies.jsp --%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
-prefix="c" %> <%@ page import="java.util.List" %> <%@ page
-import="com.theatre.Movie" %> <%@ page contentType="text/html; charset=UTF-8"
-language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Movie Listings</title>
-    <link rel="stylesheet" type="text/css" href="styles.css" />
-    <script>
-      function reserveSeat(movieId) {
-        var userName = prompt("Enter your name:");
-        if (!userName) return;
-
-        var seatNumber = prompt("Enter seat number (e.g., A1, B3):");
-        if (!seatNumber) return;
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "reserve", true);
-        xhr.setRequestHeader(
-          "Content-Type",
-          "application/x-www-form-urlencoded"
-        );
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4) {
-            if (xhr.status == 200) {
-              alert(xhr.responseText);
-            } else {
-              alert("Error: " + xhr.status);
-            }
-          }
-        };
-        xhr.send(
-          "movie_id=" +
-            encodeURIComponent(movieId) +
-            "&user_name=" +
-            encodeURIComponent(userName) +
-            "&seat_number=" +
-            encodeURIComponent(seatNumber)
-        );
+    <meta charset="UTF-8" />
+    <title>Movie Theater - Available Movies</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
       }
-    </script>
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #333;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 5px 0;
+      }
+      .admin-button {
+        background-color: #2196f3;
+      }
+      .no-movies {
+        padding: 20px;
+        text-align: center;
+        font-style: italic;
+      }
+    </style>
   </head>
   <body>
-    <h1>Available Movies</h1>
+    <div class="container">
+      <h1>Available Movies</h1>
 
-    <% if (session.getAttribute("admin") != null) { %>
-    <div class="admin-controls">
-      <a href="admin.jsp" class="button">Add New Movie</a>
-    </div>
-    <% } %>
+      <c:if test="${sessionScope.admin != null}">
+        <a
+          href="${pageContext.request.contextPath}/admin/addMovie"
+          class="button admin-button"
+          >Add New Movie</a
+        >
+      </c:if>
 
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Genre</th>
-        <th>Duration</th>
-        <th>Action</th>
-      </tr>
-      <c:forEach var="movie" items="${movies}">
-        <tr>
-          <td><c:out value="${movie.name}" /></td>
-          <td><c:out value="${movie.genre}" /></td>
-          <td><c:out value="${movie.duration}" /> mins</td>
-          <td>
-            <button onclick="reserveSeat(${movie.id})">Reserve Seat</button>
-          </td>
-        </tr>
-      </c:forEach>
-    </table>
+      <c:choose>
+        <c:when test="${not empty movies}">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach var="movie" items="${movies}">
+                <tr>
+                  <td>${movie.name}</td>
+                  <td>${movie.genre}</td>
+                  <td>${movie.duration} mins</td>
+                  <td>
+                    <a
+                      href="${pageContext.request.contextPath}/showtimes?movieId=${movie.id}"
+                      class="button"
+                      >View Showtimes</a
+                    >
+                  </td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </c:when>
+        <c:otherwise>
+          <div class="no-movies">
+            <p>No movies available at this time.</p>
+          </div>
+        </c:otherwise>
+      </c:choose>
 
-    <c:if test="${empty movies}">
-      <p>No movies available at this time.</p>
-    </c:if>
-
-    <div class="footer">
-      <a href="index.jsp">Return to Home</a>
-      <% if (session.getAttribute("admin") == null) { %>
-      <a href="login.jsp">Admin Login</a>
-      <% } else { %>
-      <a href="logout">Logout</a>
-      <% } %>
+      <div style="margin-top: 20px">
+        <a href="${pageContext.request.contextPath}/" class="button"
+          >Return to Home</a
+        >
+        <c:choose>
+          <c:when test="${sessionScope.admin == null}">
+            <a
+              href="${pageContext.request.contextPath}/admin/login"
+              class="button admin-button"
+              >Admin Login</a
+            >
+          </c:when>
+          <c:otherwise>
+            <a
+              href="${pageContext.request.contextPath}/admin/logout"
+              class="button admin-button"
+              >Logout</a
+            >
+          </c:otherwise>
+        </c:choose>
+      </div>
     </div>
   </body>
 </html>

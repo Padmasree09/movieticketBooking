@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseUtil {
     // Move database config to one place
-    private static final String URL = "jdbc:mysql://localhost:3306/theatre_db";
+    private static final String URL = "jdbc:mysql://localhost:3305/theatre_db";
     private static final String USER = "root";
     private static final String PASSWORD = "Dinnu*91004"; // Consider using environment variables instead
     

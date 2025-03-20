@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!-- <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
     <title>Admin - Add Movies</title>
@@ -12,4 +12,4 @@
         <input type="submit" value="Add Movie">
     </form>
 </body>
-</html>
+</html> -->

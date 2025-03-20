@@ -1,6 +1,0 @@
-com\theatre\Movie.class
-com\theatre\MovieServlet.class
-com\theatre\AddMovieServlet.class
-com\theatre\DatabaseUtil.class
-com\theatre\LoginServlet.class
-com\theatre\ReservationServlet.class
